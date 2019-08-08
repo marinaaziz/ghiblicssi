@@ -15,19 +15,18 @@ class MainPageHandler(webapp2.RequestHandler):
         template = jinja_env.get_template('templates/main.html')
         self.response.write(template.render())
 
-# class RecipeDisplayHandler(webapp2.RequestHandler):
-#     def post(self):
-#         query = self.request.get('query')
-#         base_url = 'http://www.recipepuppy.com/api/?'
-#         params = { 'q': query }
-#         response = urlfetch.fetch(base_url + urlencode(params)).content
-#         results = json.loads(response)
-#
-#         template = jinja_env.get_template('templates/recipe.html')
-#         self.response.write(template.render({
-#             'results': results
-#         }))
+class SearchHandler(webapp2.RequestHandler):
+    def post(self):
+        base_url = 'http://ghibli.herokuapp.com/'
+        params = { 'q': query }
+        response = urlfetch.fetch(base_url + urlencode(params)).content
+        results = json.loads(response)
+        template = jinja_env.get_template('templates/results.html')
+        self.response.write(template.render({
+            'results': results
+        }))
 
 app = webapp2.WSGIApplication([
     ('/', MainPageHandler),
+    ('/search', SearchHandler)
 ], debug=True)
