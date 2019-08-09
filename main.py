@@ -17,14 +17,11 @@ class MainPageHandler(webapp2.RequestHandler):
 
 class SearchHandler(webapp2.RequestHandler):
     def post(self):
-        base_url = 'http://ghibli.herokuapp.com/'
-        params = { 'q': query }
-        response = urlfetch.fetch(base_url + urlencode(params)).content
-        results = json.loads(response)
+        filter = self.request.get('filter')
+        base_url = 'https://ghibliapi.herokuapp.com/films{}'.format(filter)
+        response = json.loads(urlfetch.fetch(base_url).content)
         template = jinja_env.get_template('templates/results.html')
-        self.response.write(template.render({
-            'results': results
-        }))
+        self.response.write(template.render({ 'response': response }))
 
 app = webapp2.WSGIApplication([
     ('/', MainPageHandler),
